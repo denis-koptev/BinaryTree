@@ -11,8 +11,7 @@ package com.company;
  *  author: Denis Koptev
  ******************************/
 
-public class BinaryTree<K extends Comparable<? super K>,
-                V extends Comparable<? super V>> {
+public class BinaryTree<K extends Comparable<? super K>, V> {
 
     /******************************
      *  Internal node class
@@ -153,11 +152,7 @@ public class BinaryTree<K extends Comparable<? super K>,
     * */
     public String toString(boolean isForward, String separator) {
         StringBuilder str = new StringBuilder();
-        if (isForward) {
-            toString(root, str, separator);
-        } else {
-            toInverseString(root, str, separator);
-        }
+        toString(root, str, separator, isForward);
         return str.toString();
     }
 
@@ -165,9 +160,12 @@ public class BinaryTree<K extends Comparable<? super K>,
      *  Internal methods
      ******************************/
 
-    private void toString(Node<K,V> node, StringBuilder str, String separator) {
+    private void toString(Node<K,V> node, StringBuilder str,
+                          String separator, boolean isForward) {
         if (node != null) {
-            toString(node.left, str, separator);
+            Node<K,V> first = (isForward ? node.left : node.right);
+            Node<K,V> second = (isForward ? node.right : node.left);
+            toString(first, str, separator, isForward);
             str
                 .append("<")
                 .append(node.key)
@@ -175,21 +173,7 @@ public class BinaryTree<K extends Comparable<? super K>,
                 .append(node.value)
                 .append(">")
                 .append(separator);
-            toString(node.right, str, separator);
-        }
-    }
-
-    private void toInverseString(Node<K,V> node, StringBuilder str, String separator) {
-        if (node != null) {
-            toInverseString(node.right, str, separator);
-            str
-                .append("<")
-                .append(node.key)
-                .append(",")
-                .append(node.value)
-                .append(">")
-                .append(separator);
-            toInverseString(node.left, str, separator);
+            toString(second, str, separator, isForward);
         }
     }
 }
